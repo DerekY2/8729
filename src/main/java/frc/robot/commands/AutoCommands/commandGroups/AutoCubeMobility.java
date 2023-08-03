@@ -41,7 +41,7 @@ public class AutoCubeMobility extends SequentialCommandGroup {
     addRequirements(m_driveSubsystem, m_elevatorSubsystem, m_intakeChanPart1, m_intakeChanPart2);
 
     addCommands(
-      
+
       // shoot cube, then exit community zone
       new AutoIntakeRotation(m_intakeChanPart1, 0.3, -0.5),
       new AutoElevator(m_elevatorSubsystem, -0.8/2),
