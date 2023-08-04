@@ -7,7 +7,6 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
@@ -20,33 +19,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveSubsystem extends SubsystemBase {
 
-  int state=0;
-  int debounceCount=0;
-  double onChargeStationDegree = 13.0;
-  double debounceTime = 0.2;
-  double robotSpeedSlow=0.325;
-  double robotSpeedFast=0.65;
-  double levelDegree=6.0;
-  boolean toggle = false;
-  boolean up = false;
-  boolean down = false;
-  int autoCounter=0;
-  boolean mid = false;
   double slowDrive = 1.0;
   double slowTurn = 1.0;
-  double high = -219;
-  double middle = -116;
-  int angle = 5;
-  boolean turn = false;
-  boolean align = false;
-  double turnsetpoint = 0.0;
-  boolean elevatorSlowDrive = false;
-  boolean toggleSlowDrive = false;
 
-    // Initialize driver & operator controllers
-    final Joystick JOYSTICK = new Joystick(0);
-    final Joystick JOYSTICK2 = new Joystick(1);
-  
     // Set motor controller connections: Drivetrain motor > SPX > RoboRIO
     final WPI_VictorSPX FRONT_LEFT = new WPI_VictorSPX(4);
     final WPI_VictorSPX FRONT_RIGHT = new WPI_VictorSPX(6);

@@ -13,13 +13,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 public class IntakeChanPart2 extends SubsystemBase {
   /** Creates a new IntakeSubsystem. */
   /** Creates a new ElevatorSubsystem. */
-  
-  int angle = 5;
-  boolean turn = false;
-  boolean align = false;
-  double turnsetpoint = 0.0;
  
-
   final CANSparkMax INTAKE = new CANSparkMax(3, MotorType.kBrushless);
   // initialize built-in encoder from NEO (right only)
 
