@@ -4,25 +4,23 @@
 
 package frc.robot.commands.AutoCommands.commandGroups;
 
-import frc.robot.commands.AutoCommands.AutoIntakeRotation;
-import frc.robot.commands.AutoCommands.AutoElevator;
+import frc.robot.commands.IntakeSetCmd;
+import frc.robot.commands.ElevatorCmd;
+import frc.robot.commands.IntakeRotationCmd;
 import frc.robot.commands.AutoCommands.AutoDrive;
-import frc.robot.commands.AutoCommands.AutoSetIntake;
-
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IntakeChanPart1;
 import frc.robot.subsystems.IntakeChanPart2;
 
+import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.CubeMobility;
+
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 /** An example command that uses an example subsystem. */
 public class AutoCubeMobility extends SequentialCommandGroup {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  
-  private final DriveSubsystem m_driveSubsystem;
-  private final ElevatorSubsystem m_elevatorSubsystem;
-  private final IntakeChanPart1 m_intakeChanPart1;
-  private final IntakeChanPart2 m_intakeChanPart2;
+
   //private final LimelightSubsystem m_limelightSubsystem;
 
 
@@ -32,25 +30,20 @@ public class AutoCubeMobility extends SequentialCommandGroup {
    * @param subsystem The subsystem used by this command.
    */
   public AutoCubeMobility(DriveSubsystem m_driveSubsystem, ElevatorSubsystem m_elevatorSubsystem, IntakeChanPart1 m_intakeChanPart1, IntakeChanPart2 m_intakeChanPart2) {
-    this.m_driveSubsystem = m_driveSubsystem;
-    this.m_elevatorSubsystem = m_elevatorSubsystem;
-    this.m_intakeChanPart1 = m_intakeChanPart1;
-    this.m_intakeChanPart2 = m_intakeChanPart2;
-
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(m_driveSubsystem, m_elevatorSubsystem, m_intakeChanPart1, m_intakeChanPart2);
 
     addCommands(
 
       // shoot cube, then exit community zone
-      new AutoIntakeRotation(m_intakeChanPart1, 0.3, -0.5),
-      new AutoElevator(m_elevatorSubsystem, -0.8/2),
-      new AutoElevator(m_elevatorSubsystem, 0.1, 0.3/2),
-      new AutoIntakeRotation(m_intakeChanPart1, 2.0, 0.7),
-      new AutoSetIntake(m_intakeChanPart2, 0.5, -0.9),
-      new AutoIntakeRotation(m_intakeChanPart1, 0.7, -0.6),
-      new AutoElevator(m_elevatorSubsystem, 3.5, 0.3/2),
-      new AutoDrive(m_driveSubsystem, true, false, 3.5, 0.0, 0.60, 0.0)
+      new IntakeRotationCmd(m_intakeChanPart1, CubeMobility.kRotationDownSpeed, AutoConstants.kRotationStall).withTimeout(CubeMobility.kRotationDownTimeout),
+      new ElevatorCmd(m_elevatorSubsystem, CubeMobility.kElevatorUpSpeed),
+      new ElevatorCmd(m_elevatorSubsystem, CubeMobility.kElevatorCorrectionSpeed).withTimeout(CubeMobility.kElevatorCorrectionTimeout),
+      new IntakeRotationCmd(m_intakeChanPart1, CubeMobility.kRotationUpSpeed, AutoConstants.kRotationStall).withTimeout(CubeMobility.kRotationUpTimeout),
+      new IntakeSetCmd(m_intakeChanPart2, CubeMobility.kOuttakeSpeed, AutoConstants.kIntakeStall).withTimeout(CubeMobility.kOuttakeTimeout),
+      new IntakeRotationCmd(m_intakeChanPart1, CubeMobility.kRotationResetSpeed, AutoConstants.kRotationStall).withTimeout(CubeMobility.kRotationResetTimeout),
+      new ElevatorCmd(m_elevatorSubsystem, CubeMobility.kElevatorDownSpeed).withTimeout(CubeMobility.kElevatorDownTimeout),
+      new AutoDrive(m_driveSubsystem, CubeMobility.kDriveSpeed, CubeMobility.kTurnSpeed).withTimeout(CubeMobility.kDriveTimeout)
 
     );
   }

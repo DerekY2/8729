@@ -4,14 +4,15 @@
 
 package frc.robot.commands.AutoCommands.commandGroups;
 import frc.robot.commands.AutoCommands.AutoDrive;
+import frc.robot.commands.EncoderDrive;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.Constants.Engage;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 /** An example command that uses an example subsystem. */
 public class AutoEngage extends SequentialCommandGroup {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   
-  private final DriveSubsystem m_driveSubsystem;
   //private final LimelightSubsystem m_limelightSubsystem;
 
 
@@ -21,17 +22,15 @@ public class AutoEngage extends SequentialCommandGroup {
    * @param subsystem The subsystem used by this command.
    */
   public AutoEngage(DriveSubsystem m_driveSubsystem) {
-    this.m_driveSubsystem = m_driveSubsystem;
-
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(m_driveSubsystem);
 
     addCommands(
       
         // engage
-      new AutoDrive(m_driveSubsystem, true, false, 3.0, 0.0, 0.6, 0.0), 
-      new AutoDrive(m_driveSubsystem, false, true, 0.0, 2800, 0.55, 0.0),
-      new AutoDrive(m_driveSubsystem, false, true, 0.0, 430, 0.0, 0.4)
+      new AutoDrive(m_driveSubsystem, Engage.kDriveSpeed, Engage.kTurnSpeed).withTimeout(Engage.kDriveTimeout), 
+      new EncoderDrive(m_driveSubsystem, Engage.kEncoderDriveSpeed, Engage.kEncoderTurnSpeed, Engage.kEncoderDriveDistance, Engage.kEndInverted1),
+      new EncoderDrive(m_driveSubsystem, Engage.kEncoderAdjustSpeed, Engage.kEncoderAdjustTurn, Engage.kEncoderAdjustDistance, Engage.kEndInverted2)
 
     );
   }

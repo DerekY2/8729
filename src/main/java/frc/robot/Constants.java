@@ -22,7 +22,7 @@ public final class Constants {
     public static final double kCorrectionSpeed = 0.2/2; // descending speed when elevator hits limit switch
     public static final double kSpeedMid = 0.3; // actual speed is: kSpeedMid * timer.get()
 
-    public static final double defaultSpeed = 0.0; // when no cmd
+    public static final double kElevatorInterrupted = 0.0; // off
 
   }
 
@@ -32,6 +32,8 @@ public final class Constants {
 
     public static final double kRotationSpeedUp = 0.95; // Intake upwards rotation speed
     public static final double kRotationSpeedDown = -0.55; // Intake downwards rotation speed
+    public static final double kRotationOff = 0.0;
+    public static final double kStallOff = 0.0;
 
     public static final double idol = 0.15; // idle speed
 
@@ -65,7 +67,11 @@ public final class Constants {
 
     // default angular setpoint
     public static final double kSetpoint = 90;
-    public static final double noSetpoint = 0; // setpoint to 0, should not change at all
+    public static final double kNoSetpoint = 0; // setpoint to 0, should not change at all
+    public static final double kSetpointInterrupted = 0.0;
+
+    public static final double kT = -0.007; // turn speed multiplier (kT * error)
+    public static final double kMarginError = 5.0;
 
 
   }
@@ -87,8 +93,127 @@ public final class Constants {
   /*********************Auto constants*********************/
   public static final class AutoConstants{
     public static final double kInterrupted = 0.0; // this should not change
-    
+
+    public static final double kRotationStall = 0.0;
+
+    public static final double kIntakeStall = 0.0;
+
   }
+
+  public static final class ConeMobility{
+
+    
+    public static final double kRotationUpSpeed = -0.5; // intake up
+    public static final double kRotationUpTimeout = 0.3;
+
+    public static final double kElevatorUpSpeed = -1.0/2; 
+
+    public static final double kElevatorCorrectionSpeed = 0.3/2;
+    public static final double kElevatorCorrectionTimeout = 0.1;
+
+    public static final double kRotationDownSpeed = 0.9;
+    public static final double kRotationDownTimeout = 0.7;
+
+    public static final double kOuttakeSpeed = -0.9;
+    public static final double kOuttakeTimeout = 0.5;
+
+    public static final double kRotationResetSpeed = -0.6;
+    public static final double kRotationResetTimeout = 0.7;
+
+    public static final double kElevatorDownSpeed = 0.8/2;
+    public static final double kElevatorDownTimeout = 1.5;
+
+    public static final double kDriveSpeed = 0.65;
+    public static final double kTurnSpeed = 0.0;
+    public static final double kDriveTimeout = 2.0;
+
+    public static final double kEncoderDriveSpeed = 0.55;
+    public static final double kEncoderTurnSpeed = 0.0;
+    public static final double kEncoderDriveDistance = -1240;
+    public static final boolean kEncoderEndInverted = true;
+  }
+
+  public static final class CubeEngage{
+
+
+    public static final double kRotationUpSpeed = -0.5;
+    public static final double kRotationUpTimeout = 0.2;
+
+    public static final double kElevatorUpSpeed = -0.8;
+
+    public static final double kElevatorCorrectionSpeed = 0.3;
+    public static final double kElevatorCorrectionTimeout = 0.1;
+
+    public static final double kDriveSpeed = -0.45;
+    public static final double kTurnSpeed = 0.0;
+    public static final double kDriveTimeout = 1.5;
+
+    public static final double kRotationAlignSpeed = -0.6;
+    public static final double kRotationAlignTimeout = 0.7;
+
+    public static final double kOuttakeSpeed = 0.5;
+    public static final double kOuttakeTimeout = 1.0;
+
+    public static final double kRotationDownSpeed = 0.6;
+    public static final double kRotationDownTimeout = 0.5;
+
+    public static final double kElevatorDownSpeed = 0.7;
+    public static final double kELevatorDownTimeout = 1.4;
+
+    // see Engage Constants below
+
+  }
+
+  public static class Engage{
+
+    public static final double kDriveSpeed = 0.6;
+    public static final double kTurnSpeed = 0.0;
+    public static final double kDriveTimeout = 3.0;
+
+    public static final double kEncoderDriveSpeed = 0.55;
+    public static final double kEncoderTurnSpeed = 0.0;
+    public static final double kEncoderDriveDistance = 2800;
+    public static final boolean kEndInverted1 = false;
+
+    public static final double kEncoderAdjustSpeed = 0.0;
+    public static final double kEncoderAdjustTurn = 0.4;
+    public static final double kEncoderAdjustDistance = 430.0;
+    public static final boolean kEndInverted2 = false;
+
+
+  }
+
+  public static final class CubeMobility{
+
+    public static final double kRotationDownSpeed = -0.5;
+    public static final double kRotationDownTimeout = 0.3;
+
+    public static final double kElevatorUpSpeed = -0.8/2;
+
+    public static final double kElevatorCorrectionSpeed = 0.3/2;
+    public static final double kElevatorCorrectionTimeout = 0.1;
+
+    public static final double kRotationUpSpeed = 0.7;
+    public static final double kRotationUpTimeout = 2.0;
+
+    public static final double kOuttakeSpeed = -0/9;
+    public static final double kOuttakeTimeout = 0.5;
+
+    public static final double kRotationResetSpeed = -0.6;
+    public static final double kRotationResetTimeout = 0.7;
+
+    public static final double kElevatorDownSpeed = 0.3/2;
+    public static final double kElevatorDownTimeout = 3.5;
+
+    public static final double kDriveSpeed = 0.60;
+    public static final double kTurnSpeed = 0.0;
+    public static final double kDriveTimeout = 3.5;
+
+  }
+
+
+
+
 
   /*********************Unused constants*********************/
   /*

@@ -21,14 +21,10 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.commands.AlignmentCmd;
 import frc.robot.commands.ArcadeDriveCmd;
 import frc.robot.commands.IntakeSetCmd;
-import frc.robot.commands.ElevatorJoystickCmd;
 import frc.robot.commands.SlowDriveCmd;
 import frc.robot.commands.TurnToSetpointCmd;
-import frc.robot.commands.ElevatorMidCmd;
-import frc.robot.commands.ElevatorDownCmd;
-import frc.robot.commands.ElevatorUpCmd;
+import frc.robot.commands.ElevatorCmd;
 import frc.robot.commands.IntakeRotationCmd;
-import frc.robot.commands.IntakeRotationLock;
 import frc.robot.commands.AutoCommands.commandGroups.AutoCubeEngage;
 import frc.robot.commands.AutoCommands.commandGroups.AutoCubeMobility;
 import frc.robot.commands.AutoCommands.commandGroups.AutoConeMobility;
@@ -74,8 +70,8 @@ public class RobotContainer {
   public RobotContainer() {
 
     m_driveSubsystem.setDefaultCommand(new ArcadeDriveCmd(m_driveSubsystem, () -> JOYSTICK.getRawAxis(1), () -> -JOYSTICK.getRawAxis(4)));
-    m_elevatorSubsystem.setDefaultCommand(new ElevatorJoystickCmd(m_elevatorSubsystem, ElevatorConstants.defaultSpeed));
-    m_intakeChanPart1.setDefaultCommand(new IntakeRotationLock(m_intakeChanPart1));
+    m_elevatorSubsystem.setDefaultCommand(new ElevatorCmd(m_elevatorSubsystem, ElevatorConstants.kElevatorInterrupted));
+    m_intakeChanPart1.setDefaultCommand(new IntakeRotationCmd(m_intakeChanPart1, IntakePart1Constants.kRotationOff, IntakePart1Constants.kStallOff));
     m_intakeChanPart2.setDefaultCommand(new IntakeSetCmd(m_intakeChanPart2, IntakePart2Constants.defaultSpeed, IntakePart2Constants.defaultIdolSpeed));
 
 
@@ -107,16 +103,16 @@ public class RobotContainer {
     new JoystickButton(JOYSTICK, 2).onTrue(new SlowDriveCmd(m_driveSubsystem, DriveConstants.kDriveSpeed, DriveConstants.kTurnSpeed)); // full speed drive 
     new JoystickButton(JOYSTICK, 3).onTrue(new TurnToSetpointCmd(m_driveSubsystem, DriveConstants.kSetpoint)); // turn to a pre-specified angle
     new JoystickButton(JOYSTICK, 4).onTrue(new AlignmentCmd(m_driveSubsystem, m_limelightSubsystem, LimelightConstants.kAlignmentSpeed)); // m_drive, m_limelight, speed
-    new JoystickButton(JOYSTICK, 6).onTrue(new TurnToSetpointCmd(m_driveSubsystem, DriveConstants.noSetpoint)); // cancel pre-specified turn
+    new JoystickButton(JOYSTICK, 6).onTrue(new TurnToSetpointCmd(m_driveSubsystem, DriveConstants.kNoSetpoint)); // cancel turn
     
     // operator controls
-    new JoystickButton(JOYSTICK2, 1).onTrue(new ElevatorMidCmd(m_elevatorSubsystem)); // Move elevator to mid-level; does not work as intended
-    new JoystickButton(JOYSTICK2, 2).whileTrue(new ElevatorDownCmd(m_elevatorSubsystem, ElevatorConstants.kSpeedDown)); // elevator descends
-    new JoystickButton(JOYSTICK2, 3).onTrue(new IntakeRotationLock(m_intakeChanPart1)); // set intake rotation to 0.0
-    new JoystickButton(JOYSTICK2, 4).whileTrue(new ElevatorUpCmd(m_elevatorSubsystem)); // elevator ascends
-    new JoystickButton(JOYSTICK2, 5).whileTrue(new IntakeRotationCmd(m_intakeChanPart1, IntakePart1Constants.kRotationSpeedUp)); // intake rotation up
+    //new JoystickButton(JOYSTICK2, 1).onTrue(new ElevatorMidCmd(m_elevatorSubsystem)); // Move elevator to mid-level; does not work as intended
+    new JoystickButton(JOYSTICK2, 2).whileTrue(new ElevatorCmd(m_elevatorSubsystem, ElevatorConstants.kSpeedDown)); // elevator descends
+    new JoystickButton(JOYSTICK2, 3).onTrue(new IntakeRotationCmd(m_intakeChanPart1, IntakePart1Constants.kRotationOff, IntakePart1Constants.idol)); // set intake rotation to 0.0
+    new JoystickButton(JOYSTICK2, 4).whileTrue(new ElevatorCmd(m_elevatorSubsystem, ElevatorConstants.kSpeedUp)); // elevator ascends
+    new JoystickButton(JOYSTICK2, 5).whileTrue(new IntakeRotationCmd(m_intakeChanPart1, IntakePart1Constants.kRotationSpeedUp, IntakePart1Constants.idol)); // intake rotation up
     new JoystickButton(JOYSTICK2, 6).whileTrue(new IntakeSetCmd(m_intakeChanPart2, IntakePart2Constants.kCubeIn, IntakePart2Constants.idolCubeIn)); // cube intake, cone outtake
-    new JoystickButton(JOYSTICK2, 7).whileTrue(new IntakeRotationCmd(m_intakeChanPart1, IntakePart1Constants.kRotationSpeedDown)); // intake rotation down
+    new JoystickButton(JOYSTICK2, 7).whileTrue(new IntakeRotationCmd(m_intakeChanPart1, IntakePart1Constants.kRotationSpeedDown, IntakePart1Constants.idol)); // intake rotation down
     new JoystickButton(JOYSTICK2, 8).whileTrue(new IntakeSetCmd(m_intakeChanPart2, IntakePart2Constants.kCubeOut, IntakePart2Constants.idolCubeOut)); // cube outtake, cone intake
 
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`

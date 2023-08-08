@@ -2,28 +2,32 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.AutoCommands;
+package frc.robot.commands;
 
 import frc.robot.Constants.AutoConstants;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /** An example command that uses an example subsystem. */
-public class AutoDrive extends CommandBase {
+public class EncoderDrive extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final DriveSubsystem m_driveSubsystem;
   private final double speed;
   private final double rotation;
+  private final double encoderDistance;
+  private final boolean inverted;
 
   /**
    * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public AutoDrive(DriveSubsystem subsystem, double xSpeed, double rotation) {
+  public EncoderDrive(DriveSubsystem subsystem, double xSpeed, double rotation, double distance, boolean invertFinishCondition) {
     m_driveSubsystem = subsystem;
     this.speed = xSpeed;
     this.rotation = rotation;
+    this.encoderDistance = distance;
+    this.inverted = invertFinishCondition;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
 
@@ -32,7 +36,7 @@ public class AutoDrive extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    System.out.println("AutoDrive Started");
+    System.out.println("EncoderDrive Started");
     
   }
 
@@ -47,13 +51,29 @@ public class AutoDrive extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     m_driveSubsystem.drive(AutoConstants.kInterrupted, AutoConstants.kInterrupted);
-    System.out.println("AutoDrive Ended");
+    System.out.println("EncoderDrive Ended");
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    if(inverted){
+      if(m_driveSubsystem.getEncoderDistance() > encoderDistance){
+      return false;
+      }
+      else{
+        return true;
+      }
+    }
+    
+    else{
+      if(m_driveSubsystem.getEncoderDistance() < encoderDistance){
+      return false;
+      }
+      else{
+        return true;
+      }
+    }
   }
 }
 

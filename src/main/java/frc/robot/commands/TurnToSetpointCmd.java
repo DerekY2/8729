@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants.DriveConstants;
 
 /** An example command that uses an example subsystem. */
 public class TurnToSetpointCmd extends CommandBase {
@@ -38,21 +39,21 @@ public class TurnToSetpointCmd extends CommandBase {
   @Override
   public void execute() {
       error = turnSetpoint-m_driveSubsystem.getYaw();
-      m_driveSubsystem.drive(0.0, -0.007*error);
-      m_driveSubsystem.sendToDashboard("turn value", -0.007*error);
+      m_driveSubsystem.drive(0.0, DriveConstants.kT*error);
+      m_driveSubsystem.sendToDashboard("turn value", DriveConstants.kT*error);
       
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_driveSubsystem.drive(0.0, 0.0);
+    m_driveSubsystem.drive(DriveConstants.kSetpointInterrupted, DriveConstants.kSetpointInterrupted);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (error > 5.0) {
+    if (error > DriveConstants.kMarginError) {
       return false;
     }
     else{  

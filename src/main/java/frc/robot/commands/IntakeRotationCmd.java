@@ -5,7 +5,6 @@
 package frc.robot.commands;
 
 import frc.robot.subsystems.IntakeChanPart1;
-import frc.robot.Constants.IntakePart1Constants;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /** An example command that uses an example subsystem. */
@@ -13,15 +12,17 @@ public class IntakeRotationCmd extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final IntakeChanPart1 m_intakeChanPart1;
   private double speed;
+  private double stall;
 
   /**
    * Creates a new IntakeRotationCmd.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public IntakeRotationCmd(IntakeChanPart1 subsystem, double speed) {
+  public IntakeRotationCmd(IntakeChanPart1 subsystem, double speed, double idol) {
     this.m_intakeChanPart1 = subsystem;
     this.speed = speed;
+    this.stall = idol;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
   }
@@ -41,7 +42,7 @@ public class IntakeRotationCmd extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_intakeChanPart1.setMotor(IntakePart1Constants.idol); // continue to feed forward while idle to counter gravity
+    m_intakeChanPart1.setMotor(stall); // continue to feed forward while idle to counter gravity
   }
 
   // Returns true when the command should end.

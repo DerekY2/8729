@@ -2,30 +2,27 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.AutoCommands;
+package frc.useless;
 
-import frc.robot.subsystems.IntakeChanPart2;
-import frc.robot.Constants.AutoConstants;
+import frc.robot.subsystems.ElevatorSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj.Timer;
+import frc.robot.Constants.ElevatorConstants;
 
 /** An example command that uses an example subsystem. */
-public class AutoSetIntake extends CommandBase {
+public class ElevatorMidCmd extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final IntakeChanPart2 m_intakeChanPart2;
-  private final double time;
-  private final double speed;
+  private final ElevatorSubsystem m_elevatorSubsystem;
   Timer timer = new Timer();
+  private final double midSpeed = ElevatorConstants.kSpeedMid;
 
   /**
-   * Creates a new ExampleCommand.
+   * Creates a new ElevatorMidCmd.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public AutoSetIntake(IntakeChanPart2 subsystem, double timeout, double speed) {
-    this.m_intakeChanPart2 = subsystem;
-    this.time = timeout;
-    this.speed = speed;
+  public ElevatorMidCmd(ElevatorSubsystem subsystem) {
+    m_elevatorSubsystem = subsystem;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
   }
@@ -33,34 +30,32 @@ public class AutoSetIntake extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    System.out.println("AutoSetIntake Started");
     timer.reset();
     timer.start();
-    
+    m_elevatorSubsystem.setMotor(midSpeed/timer.get());
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_intakeChanPart2.setMotor(speed);
-    System.out.println(timer.get());
+    //SmartDashboard.putNumber("speed of elevator", kp*error/2);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_intakeChanPart2.setMotor(AutoConstants.kInterrupted); 
-    System.out.println("AutoSetIntake Ended");
+    m_elevatorSubsystem.setMotor(0.0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(timer.get() < time){ // end command after reaching timeout
-      return false;
+    if(m_elevatorSubsystem.getTopLimitSwitch()){
+      return true;
     }
     else{
-      return true;
+      return false;
     }
   }
 }

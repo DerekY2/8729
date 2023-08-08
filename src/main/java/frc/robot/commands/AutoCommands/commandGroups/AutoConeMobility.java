@@ -4,25 +4,23 @@
 
 package frc.robot.commands.AutoCommands.commandGroups;
 
-import frc.robot.commands.AutoCommands.AutoIntakeRotation;
-import frc.robot.commands.AutoCommands.AutoElevator;
+import frc.robot.commands.IntakeSetCmd;
+import frc.robot.commands.ElevatorCmd;
+import frc.robot.commands.IntakeRotationCmd;
+import frc.robot.commands.EncoderDrive;
 import frc.robot.commands.AutoCommands.AutoDrive;
-import frc.robot.commands.AutoCommands.AutoSetIntake;
-
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IntakeChanPart1;
 import frc.robot.subsystems.IntakeChanPart2;
 
+import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.ConeMobility;
+
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 /** An example command that uses an example subsystem. */
 public class AutoConeMobility extends SequentialCommandGroup {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  
-  private final DriveSubsystem m_driveSubsystem;
-  private final ElevatorSubsystem m_elevatorSubsystem;
-  private final IntakeChanPart1 m_intakeChanPart1;
-  private final IntakeChanPart2 m_intakeChanPart2;
   //private final LimelightSubsystem m_limelightSubsystem;
 
 
@@ -32,10 +30,6 @@ public class AutoConeMobility extends SequentialCommandGroup {
    * @param subsystem The subsystem used by this command.
    */
   public AutoConeMobility(DriveSubsystem m_driveSubsystem, ElevatorSubsystem m_elevatorSubsystem, IntakeChanPart1 m_intakeChanPart1, IntakeChanPart2 m_intakeChanPart2) {
-    this.m_driveSubsystem = m_driveSubsystem;
-    this.m_elevatorSubsystem = m_elevatorSubsystem;
-    this.m_intakeChanPart1 = m_intakeChanPart1;
-    this.m_intakeChanPart2 = m_intakeChanPart2;
 
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(m_driveSubsystem, m_elevatorSubsystem, m_intakeChanPart1, m_intakeChanPart2);
@@ -43,15 +37,15 @@ public class AutoConeMobility extends SequentialCommandGroup {
     addCommands(
         
       // shoot cone, then exit community zone
-      new AutoIntakeRotation(m_intakeChanPart1, 0.3, -0.5),
-      new AutoElevator(m_elevatorSubsystem, -1.0/2),
-      new AutoElevator(m_elevatorSubsystem, 0.1, 0.3/2),
-      new AutoIntakeRotation(m_intakeChanPart1, 0.7, 0.9),
-      new AutoSetIntake(m_intakeChanPart2, 0.5, -0.9),
-      new AutoIntakeRotation(m_intakeChanPart1, 0.7, -0.6),
-      new AutoElevator(m_elevatorSubsystem, 1.5, 0.8/2),
-      new AutoDrive(m_driveSubsystem, true, false, 2.0, 0.0, 0.65, 0.0),
-      new AutoDrive(m_driveSubsystem, false, true, true, 0.0, -1240, 0.55, 0.0)
+      new IntakeRotationCmd(m_intakeChanPart1, ConeMobility.kRotationUpSpeed, AutoConstants.kRotationStall).withTimeout(ConeMobility.kRotationUpTimeout),
+      new ElevatorCmd(m_elevatorSubsystem, ConeMobility.kElevatorUpSpeed),
+      new ElevatorCmd(m_elevatorSubsystem, ConeMobility.kElevatorCorrectionSpeed).withTimeout(ConeMobility.kElevatorCorrectionTimeout),
+      new IntakeRotationCmd(m_intakeChanPart1, ConeMobility.kRotationDownSpeed, AutoConstants.kRotationStall).withTimeout(ConeMobility.kRotationDownTimeout),
+      new IntakeSetCmd(m_intakeChanPart2, ConeMobility.kOuttakeSpeed, AutoConstants.kIntakeStall).withTimeout(ConeMobility.kOuttakeTimeout),
+      new IntakeRotationCmd(m_intakeChanPart1, ConeMobility.kRotationResetSpeed, AutoConstants.kRotationStall).withTimeout(ConeMobility.kRotationResetTimeout),
+      new ElevatorCmd(m_elevatorSubsystem, ConeMobility.kElevatorDownSpeed).withTimeout(ConeMobility.kElevatorDownTimeout),
+      new AutoDrive(m_driveSubsystem, ConeMobility.kDriveSpeed, ConeMobility.kTurnSpeed).withTimeout(ConeMobility.kDriveTimeout),
+      new EncoderDrive(m_driveSubsystem, ConeMobility.kEncoderDriveSpeed, ConeMobility.kEncoderTurnSpeed, ConeMobility.kEncoderDriveDistance, ConeMobility.kEncoderEndInverted)
 
     );
   }
