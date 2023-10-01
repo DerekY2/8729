@@ -96,6 +96,6 @@ public class ArcadeDriveCommand extends CommandBase {
       angular = checkTurn.getAsDouble();
     }
 
-    m_driveSubsystem.setMotor(speedFunction.getAsDouble(), turnFunction.getAsDouble());
+    m_driveSubsystem.setMotor(xSpeed, angular);
   }
 }
