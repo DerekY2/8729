@@ -44,12 +44,12 @@ public class ArcadeDriveCommand extends CommandBase {
   @Override
   public void execute() {
 
-    if(DriveConstants.setMaximumDriveSpeeds){
-      checkMaxSpeeds(speedFunction, turnFunction);
+    if(!DriveConstants.setMaximumDriveSpeeds){
+      m_driveSubsystem.setMotor(speedFunction.getAsDouble(), turnFunction.getAsDouble());
     }
     //System.out.println(speedFunction.getAsDouble() + ", " + turnFunction.getAsDouble());
     else{
-    m_driveSubsystem.setMotor(speedFunction.getAsDouble(), turnFunction.getAsDouble());
+      checkMaxSpeeds(speedFunction, turnFunction);
     }
 
     // just for debugging
@@ -74,6 +74,7 @@ public class ArcadeDriveCommand extends CommandBase {
     return false;
   }
 
+  // check if speeds exceed preset max speeds, if so, set motors to the preset max speeds
   public void checkMaxSpeeds(DoubleSupplier checkSpeed, DoubleSupplier checkTurn){
     if(checkSpeed.getAsDouble() >= DriveConstants.maxDriveSpeed){
       xSpeed = DriveConstants.maxDriveSpeed;
