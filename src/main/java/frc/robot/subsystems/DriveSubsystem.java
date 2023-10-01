@@ -34,9 +34,6 @@ public class DriveSubsystem extends SubsystemBase {
   // gyro
   ADXRS450_Gyro gyro = new ADXRS450_Gyro();
 
-  double xSpeed;
-  double angular;
-
   /** Creates a new ExampleSubsystem. */
   public DriveSubsystem() {
     rightDrive.setInverted(true);
@@ -70,39 +67,11 @@ public class DriveSubsystem extends SubsystemBase {
 
   public void setMotor(double speed, double turn){
 
-    if(DriveConstants.setMaximumDriveSpeeds){ // check if speed exceeds max speeds
-      checkMaxSpeeds(speed, turn);
-    }
-    else{
-      xSpeed = speed;
-      angular = turn;
-    }
-
-    robotDrive.arcadeDrive(xSpeed, angular);
+    robotDrive.arcadeDrive(speed, turn);
     //System.out.println("actual: " + speed + ", " + turn);
   }
 
-  public void checkMaxSpeeds(double speed, double turn){
-    if(speed >= DriveConstants.maxDriveSpeed){
-      xSpeed = DriveConstants.maxDriveSpeed;
-    }
-    else if(speed <= -DriveConstants.maxDriveSpeed){
-      xSpeed = -DriveConstants.maxDriveSpeed;
-    }
-    else{
-      xSpeed = speed;
-    }
-
-    if(turn >= DriveConstants.maxTurnSpeed){
-      angular = DriveConstants.maxTurnSpeed;
-    }
-    else if(turn <= -DriveConstants.maxTurnSpeed){
-      angular = -DriveConstants.maxTurnSpeed;
-    }
-    else{
-      angular = turn;
-    }
-  }
+  
 
 
   @Override
