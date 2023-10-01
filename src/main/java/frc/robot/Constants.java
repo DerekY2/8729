@@ -41,7 +41,7 @@ public final class Constants {
     public static final int kDriveAxis = 1;
     public static final int kTurnAxis = 4;
 
-    public static final double driveProportions = 1.0; // drivespeed multiplier
+    public static final double driveProportions = 0.7; // drivespeed multiplier
     public static final double turnProportions = 0.8; // turn speed multiplier
 
     public static final boolean setMaximumDriveSpeeds = true;
