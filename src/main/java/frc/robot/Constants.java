@@ -44,6 +44,10 @@ public final class Constants {
     public static final double driveProportions = 1.0; // drivespeed multiplier
     public static final double turnProportions = 0.8; // turn speed multiplier
 
+    public static final boolean setMaximumDriveSpeeds = true;
+    public static final double maxDriveSpeed = 0.7;
+    public static final double maxTurnSpeed = 0.8;
+
     public static final double slowDriveProportions = 0.75;
     public static final double slowTurnProportions = 0.75;
 
@@ -56,6 +60,7 @@ public final class Constants {
 
     // outtake speed = axis * outtakeProportions
     public static final int outtakeButton = 3; // THIS IS AN AXIS.
+    //public static final int outtakeButton1 = 7;
 
     public static final int intakeButton = 6;
 
@@ -81,12 +86,13 @@ public final class Constants {
     public static final int INTAKE_MOTOR_ID = 5;
 
     // teleop intake speeds
-    public static final double outtakeProportions = 5.0;
-    public static final double intakeSpeed = -0.5;
+    public static final double outtakeProportions = 5.0; // beacuse the corresponding button is considered a trigger/axis
+    public static final double intakeSpeed = -0.4;
+    public static final double outtakeSpeed = 0.4;
 
     public static final double intakeStallSpeed = -0.2;
 
-    public static final boolean stallAfterIntake = false;
+    public static final boolean stallAfterIntake = true;
 
   }
 

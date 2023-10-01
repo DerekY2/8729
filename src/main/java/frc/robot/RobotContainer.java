@@ -18,6 +18,7 @@ import frc.robot.commands.AutoCommands.commandGroups.CubeEngageEncoderAuto;
 import frc.robot.commands.AutoCommands.commandGroups.doNothing;
 import frc.robot.commands.AutoCommands.commandGroups.ConeMobilityTimed;
 import frc.robot.commands.AutoCommands.commandGroups.ReverseConeMobilityTimed;
+import frc.robot.commands.AutoCommands.commandGroups.ForwardIntakeAuto;
 
 import frc.robot.commands.AutoCommands.TurnErrorCommand;
 import frc.robot.commands.ArcadeDriveCommand;
@@ -76,31 +77,32 @@ public class RobotContainer {
 
     intakeSubsystem.setDefaultCommand(
         new IntakeCommand(intakeSubsystem,
-            () -> (operatorController.getRawAxis(DriveConstants.outtakeButton) * IntakeConstants.outtakeProportions)) // outtake
+            () -> (operatorController.getRawAxis(DriveConstants.outtakeButton) * IntakeConstants.outtakeProportions)) // outtake - the corresponding "button" is considered an axis...
     );
 
+    intakeSubsystem.setDefaultCommand(
+        new IntakeCommand(intakeSubsystem,
+            () -> 0.0) // outtake - the corresponding "button" is considered an axis...
+    );
     /*
     rotationSubsystem.setDefaultCommand(
         new RotationCommand(rotationSubsystem,
             () -> (-operatorController.getRawAxis(DriveConstants.rotationDownButton) * RotationConstants.rotationDownProportions) // rotation down
         ));
-      */
+    */
 
     chooser.setDefaultOption("Cone + Mobility Timed",
       new ConeMobilityTimed(driveSubsystem, intakeSubsystem, rotationSubsystem));
+    chooser.addOption("do nothing", 
+      new doNothing(driveSubsystem, intakeSubsystem, rotationSubsystem));
+    chooser.addOption("Red Bump Side - Cone + Mobility Timed",
+      new ReverseConeMobilityTimed(driveSubsystem, intakeSubsystem, rotationSubsystem));
+    chooser.addOption("Forward + Intake Timed",
+      new ForwardIntakeAuto(driveSubsystem, intakeSubsystem));
 
     /*
     chooser.addOption("Cone + Cube + Mobility Timed",
       new ConeCubeMobilityTimed(driveSubsystem, intakeSubsystem, rotationSubsystem));
-    */
-
-    chooser.addOption("do nothing", 
-      new doNothing(driveSubsystem, intakeSubsystem, rotationSubsystem));
-
-    chooser.addOption("Red Bump Side - Cone + Mobility",
-      new ReverseConeMobilityTimed(driveSubsystem, intakeSubsystem, rotationSubsystem));
-
-    /*
     chooser.addOption("Cube + Mobility Timed",
         new CubeMobilityTimedAuto(driveSubsystem, intakeSubsystem, rotationSubsystem));
     chooser.addOption("Cube + Engage Timed",
@@ -111,13 +113,9 @@ public class RobotContainer {
         new CubeEngageEncoderAuto(driveSubsystem, intakeSubsystem, rotationSubsystem));
     */
 
-    
-
     //Shuffleboard.getTab("H2O2-CMD-BASED").add("Auto Choices", chooser);
     SmartDashboard.putData("Auto Choices", chooser);
-
     CameraServer.startAutomaticCapture();
-
   }
 
   /**
@@ -141,11 +139,18 @@ public class RobotContainer {
     // Intake
     new JoystickButton(operatorController, DriveConstants.intakeButton)
         .whileTrue(new IntakeCommand(intakeSubsystem, 
-            () -> (IntakeConstants.intakeSpeed))); // in
+            () -> (IntakeConstants.intakeSpeed))); // intake
+
+    /*
+    new JoystickButton(operatorController, DriveConstants.outtakeButton1)
+        .whileTrue(new IntakeCommand(intakeSubsystem, 
+            () -> (IntakeConstants.outtakeSpeed))); // outtake
+    */
 
     new JoystickButton(operatorController, DriveConstants.stopIntakeButton) // kinda useless
         .onTrue(new IntakeCommand(intakeSubsystem,
             () -> (0.0)));
+
     
     // Rotation
     /*
@@ -180,8 +185,6 @@ public class RobotContainer {
         .onTrue(new ArcadeDriveCommand(driveSubsystem,
         () -> -(driverController.getRawAxis(DriveConstants.kDriveAxis) * DriveConstants.driveProportions),
         () -> -(driverController.getRawAxis(DriveConstants.kTurnAxis) * DriveConstants.turnProportions)));
-
-
         
     }
 
